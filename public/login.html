@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng Nhập — ENDGYM</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    /* Khu vực nút bấm nhanh tài khoản demo phục vụ vấn đáp */
+    .demo-box {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--border-strong);
+    }
+
+    .demo-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .demo-btns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .demo-btn {
+      background: #14141c;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      padding: 9px 8px;
+      border-radius: var(--radius-xs);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--accent-bright);
+      background: rgba(225, 29, 72, 0.16);
+      color: #ffffff;
+    }
+
+    .showcase-list {
+      list-style: none;
+      margin-top: 24px;
+    }
+
+    .showcase-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      margin-bottom: 10px;
+    }
+
+    .showcase-list li::before {
+      content: '■';
+      color: var(--accent-bright);
+      font-size: 0.7rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Thanh điều hướng trung tâm -->
+  <nav class="navbar">
+    <a href="/login.html" class="nav-brand">END<span>GYM</span></a>
+    <div class="nav-links">
+      <a href="/login.html" class="active">Đăng nhập</a>
+      <a href="/register.html">Đăng ký</a>
+    </div>
+  </nav>
+
+  <!-- Bố cục Split-Screen: Cột trái giới thiệu, Cột phải form đăng nhập -->
+  <div class="auth-wrapper">
+    <div class="auth-split">
+      <!-- Cột trái: Giới thiệu hệ thống -->
+      <div class="auth-showcase">
+        <div>
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px;">
+            <img src="/assets/endgym-shield-emblem.png" alt="ENDGYM Shield"
+              style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 18px rgba(225,29,72,0.55));" />
+            <div class="hero-tag" style="margin-bottom: 0;">
+              <span class="led-dot green"></span> ENDGYM SYSTEM // 24/7 ACCESS
+            </div>
+          </div>
+          <h2>NO EXCUSES.<br /><span>ONLY IRON.</span></h2>
+          <p>
+            Hệ thống quản lý thẻ hội viên, kiểm soát ra vào cửa từ RFID và điều phối lịch Huấn luyện viên cá nhân chuẩn
+            Olympic.
+          </p>
+          <ul class="showcase-list">
+            <li>Tự động nối tiếp kỳ hạn gói tập khi gia hạn sớm</li>
+            <li>Kiểm tra hiệu lực thẻ Check-in theo thời gian thực</li>
+            <li>Khóa giao dịch SQL chống trùng lịch đặt PT 1-on-1</li>
+          </ul>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #94a3b8;">
+          ENDGYM SECURITY TERMINAL // JWT + BCRYPT AUTH
+        </div>
+      </div>
+
+      <!-- Cột phải: Form Đăng nhập -->
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>ĐĂNG NHẬP HỆ THỐNG</h1>
+          <p>Xác thực định danh Hội viên, Huấn luyện viên hoặc Quản trị viên</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Địa chỉ Email định danh</label>
+            <input type="email" id="email" name="email" placeholder="admin@gym.com" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mật khẩu bảo mật</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required
+              autocomplete="current-password" />
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-primary">
+            XÁC THỰC &amp; TRUY CẬP NGAY
+          </button>
+        </form>
+
+        <!-- Hộp chọn nhanh tài khoản Demo 1-Click phục vụ vấn đáp -->
+        <div class="demo-box">
+          <div class="demo-title">Chế độ Kiểm thử Nhanh (1-Click Demo Fill)</div>
+          <div class="demo-btns">
+            <button type="button" class="demo-btn" onclick="fillDemo('admin@gym.com', '123456')">Quản trị
+              (Admin)</button>
+            <button type="button" class="demo-btn" onclick="fillDemo('trainer1@gym.com', '123456')">HLV
+              (Trainer)</button>
+            <button type="button" class="demo-btn" onclick="fillDemo('member1@gym.com', '123456')">Hội viên
+              (Member)</button>
+          </div>
+        </div>
+
+        <div class="auth-footer">
+          Chưa có tài khoản? <a href="/register.html">Đăng ký tài khoản mới</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/gym-common.js"></script>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const alertBox = document.getElementById('alertBox');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function showAlert(message, type = 'error') {
+      alertBox.textContent = message;
+      alertBox.className = `alert alert-${type}`;
+      alertBox.style.display = 'block';
+    }
+
+    // Hàm tự điền thông tin và kích hoạt đăng nhập nhanh
+    function fillDemo(email, password) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+      loginForm.dispatchEvent(new Event('submit'));
+    }
+
+    // Xử lý gửi form đăng nhập
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'ĐANG XÁC THỰC...';
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          showAlert(result.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại.', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'XÁC THỰC & TRUY CẬP NGAY';
+          return;
+        }
+
+        // Lưu JWT Token và User vào localStorage
+        localStorage.setItem('gym_token', result.data.token);
+        localStorage.setItem('gym_user', JSON.stringify(result.data.user));
+
+        const userRole = result.data.user.role;
+        showAlert(`Chào mừng ${result.data.user.full_name}! Đang chuyển hướng...`, 'success');
+
+        // Phân luồng điều hướng theo vai trò (Role-based Routing)
+        setTimeout(() => {
+          if (userRole === 'admin') {
+            window.location.href = '/admin-plans.html';
+          } else if (userRole === 'trainer') {
+            window.location.href = '/trainer-portal.html';
+          } else {
+            window.location.href = '/member-portal.html';
+          }
+        }, 550);
+
+      } catch (error) {
+        showAlert('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại server!', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'XÁC THỰC & TRUY CẬP NGAY';
+      }
+    });
+  </script>
+</body>
+
+</html>
