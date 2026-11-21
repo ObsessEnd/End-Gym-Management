@@ -146,9 +146,9 @@
           <div class="demo-btns">
             <button type="button" class="demo-btn" onclick="fillDemo('admin@gym.com', '123456')">Quản trị
               (Admin)</button>
-            <button type="button" class="demo-btn" onclick="fillDemo('trainer1@gym.com', '123456')">HLV
+            <button type="button" class="demo-btn" onclick="fillDemo('trainer.the@gym.com', '123456')">HLV
               (Trainer)</button>
-            <button type="button" class="demo-btn" onclick="fillDemo('member1@gym.com', '123456')">Hội viên
+            <button type="button" class="demo-btn" onclick="fillDemo('thaianh@gmail.com', '123456')">Hội viên
               (Member)</button>
           </div>
         </div>
@@ -162,6 +162,9 @@
 
   <script src="/js/gym-common.js"></script>
   <script>
+    // Vẽ thanh điều hướng dùng chung (tô sáng mục Đăng nhập)
+    renderNavbar('login');
+
     const loginForm = document.getElementById('loginForm');
     const alertBox = document.getElementById('alertBox');
     const submitBtn = document.getElementById('submitBtn');
@@ -212,15 +215,9 @@
         const userRole = result.data.user.role;
         showAlert(`Chào mừng ${result.data.user.full_name}! Đang chuyển hướng...`, 'success');
 
-        // Phân luồng điều hướng theo vai trò (Role-based Routing)
+        // Phân luồng điều hướng theo vai trò (dùng hàm dùng chung trong gym-common.js)
         setTimeout(() => {
-          if (userRole === 'admin') {
-            window.location.href = '/admin-plans.html';
-          } else if (userRole === 'trainer') {
-            window.location.href = '/trainer-portal.html';
-          } else {
-            window.location.href = '/member-portal.html';
-          }
+          window.location.href = getDefaultHomeByRole(userRole);
         }, 550);
 
       } catch (error) {

@@ -39,15 +39,15 @@ GO
 -- 1. NẠP USERS (8 tài khoản - Mật khẩu đều là: 123456)
 -- Hash bcrypt 10 rounds: $2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G
 -- --------------------------------------------------------
-INSERT INTO users (full_name, email, password_hash, role, is_active) VALUES
-(N'Quản Trị Viên Hệ Thống', 'admin@gym.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'admin', 1),
-(N'HLV Nguyễn Văn Thể', 'trainer.the@gym.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'trainer', 1),
-(N'HLV Trần Thị Luyện', 'trainer.luyen@gym.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'trainer', 1),
-(N'Hội viên Lê Thái Anh', 'thaianh@gmail.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
-(N'Hội viên Phạm Minh Hoàng', 'hoang.pm@gmail.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
-(N'Hội viên Vũ Hải Đăng', 'dang.vh@gmail.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
-(N'Hội viên Hoàng Ngọc Mai', 'mai.hn@gmail.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
-(N'Hội viên Đỗ Thanh Tùng', 'tung.dt@gmail.com', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1);
+INSERT INTO users (full_name, email, phone, password_hash, role, is_active) VALUES
+(N'Quản Trị Viên Hệ Thống', 'admin@gym.com', '0901000001', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'admin', 1),
+(N'HLV Nguyễn Văn Thể', 'trainer.the@gym.com', '0901000002', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'trainer', 1),
+(N'HLV Trần Thị Luyện', 'trainer.luyen@gym.com', '0901000003', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'trainer', 1),
+(N'Hội viên Lê Thái Anh', 'thaianh@gmail.com', '0901000004', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
+(N'Hội viên Phạm Minh Hoàng', 'hoang.pm@gmail.com', '0901000005', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
+(N'Hội viên Vũ Hải Đăng', 'dang.vh@gmail.com', '0901000006', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
+(N'Hội viên Hoàng Ngọc Mai', 'mai.hn@gmail.com', '0901000007', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1),
+(N'Hội viên Đỗ Thanh Tùng', 'tung.dt@gmail.com', '0901000008', '$2a$10$1pyJoPeuE9OOtWUy5VZSn.0MuERRvNHdxzvTWQoPb5Lk4cSOQch3G', 'member', 1);
 GO
 
 -- --------------------------------------------------------

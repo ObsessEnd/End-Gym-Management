@@ -40,6 +40,7 @@ CREATE TABLE users (
     id INT IDENTITY(1,1) PRIMARY KEY,
     full_name NVARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL CONSTRAINT UQ_users_email UNIQUE,
+    phone VARCHAR(15) NULL,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL CONSTRAINT CK_users_role CHECK (role IN ('admin', 'trainer', 'member')),
     is_active BIT NOT NULL CONSTRAINT DF_users_is_active DEFAULT 1,

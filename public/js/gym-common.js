@@ -213,7 +213,119 @@ function initAuiTabs(containerSelector = '.aui-tabs') {
     });
   });
 }
+// 8B. HỆ THỐNG BẢO VỆ TRANG (ROUTE GUARD) & NAVBAR DÙNG CHUNG THEO VAI TRÒ
 
+// Trả về trang mặc định tương ứng với vai trò của tài khoản
+function getDefaultHomeByRole(role) {
+  if (role === 'admin') return '/admin-plans.html';
+  if (role === 'trainer') return '/trainer-portal.html';
+  return '/member-portal.html';
+}
+
+// Giải mã phần Payload của JWT (không cần gọi Server) để kiểm tra Token đã hết hạn chưa
+function isTokenExpired(token) {
+  try {
+    const parts = String(token).split('.');
+    if (parts.length !== 3) return true; // Token sai cấu trúc 3 phần -> coi như hỏng
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
+    if (!payload.exp) return false;
+    return payload.exp * 1000 <= Date.now(); // Quy đổi exp (giây) sang mili-giây để so sánh
+  } catch (e) {
+    return true;
+  }
+}
+
+/**
+ * Bảo vệ trang: đặt ở đầu script của các trang yêu cầu đăng nhập
+ * @param {string[]} allowedRoles - Mảng các vai trò được phép vào trang (VD: ['admin'])
+ * @returns {object|null} Trả về object user nếu hợp lệ, ngược lại tự chuyển trang và trả null
+ */
+function guardPage(allowedRoles = []) {
+  const token = localStorage.getItem('gym_token');
+  const user = getGymUser();
+
+  // Chưa đăng nhập hoặc Token hết hạn -> xóa rác và đẩy về trang đăng nhập
+  if (!token || !user || isTokenExpired(token)) {
+    localStorage.removeItem('gym_token');
+    localStorage.removeItem('gym_user');
+    window.location.replace('/login.html');
+    return null;
+  }
+
+  // Đã đăng nhập nhưng sai vai trò (VD: Member cố mở trang Admin) -> đẩy về đúng cổng của mình
+  if (Array.isArray(allowedRoles) && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    window.location.replace(getDefaultHomeByRole(user.role));
+    return null;
+  }
+
+  return user;
+}
+
+/**
+ * Tự động vẽ thanh Menu điều hướng chuẩn theo vai trò đang đăng nhập
+ * @param {string} activeKey - Khóa trang đang mở để tô sáng viền đỏ (VD: 'home', 'plans', 'member')
+ */
+function renderNavbar(activeKey = '') {
+  const navContainer = document.querySelector('.navbar .nav-links, .navbar .navbar-links');
+  if (!navContainer) return;
+
+  const token = localStorage.getItem('gym_token');
+  const rawUser = getGymUser();
+  const user = token && rawUser && !isTokenExpired(token) ? rawUser : null;
+  const role = user ? user.role : 'guest';
+
+  // Bảng cấu hình Menu theo từng vai trò (Lookup Table giúp code gọn, không if/else dài dòng)
+  const MENU_BY_ROLE = {
+    admin: [
+      { key: 'home', href: '/index.html', label: 'Trang chủ' },
+      { key: 'plans', href: '/admin-plans.html', label: 'Quản lý Gói' },
+      { key: 'memberships', href: '/admin-memberships.html', label: 'Hợp đồng' },
+      { key: 'checkin', href: '/checkin.html', label: 'Trạm RFID' },
+      { key: 'reports', href: '/admin-reports.html', label: 'Báo cáo' },
+      { key: 'profile', href: '/profile.html', label: 'Hồ sơ' },
+    ],
+    trainer: [
+      { key: 'home', href: '/index.html', label: 'Trang chủ' },
+      { key: 'trainer', href: '/trainer-portal.html', label: 'Lịch dạy PT' },
+      { key: 'pricing', href: '/pricing.html', label: 'Bảng giá' },
+      { key: 'profile', href: '/profile.html', label: 'Hồ sơ' },
+    ],
+    member: [
+      { key: 'home', href: '/index.html', label: 'Trang chủ' },
+      { key: 'pricing', href: '/pricing.html', label: 'Gói Thẻ VIP' },
+      { key: 'member', href: '/member-portal.html', label: 'Thẻ 3D & PT' },
+      { key: 'profile', href: '/profile.html', label: 'Hồ sơ' },
+    ],
+    guest: [
+      { key: 'home', href: '/index.html', label: 'Trang chủ' },
+      { key: 'pricing', href: '/pricing.html', label: 'Gói Thẻ VIP' },
+      { key: 'login', href: '/login.html', label: 'Đăng nhập' },
+      { key: 'register', href: '/register.html', label: 'Gia nhập Ngay', isBtn: true },
+    ],
+  };
+
+  const links = MENU_BY_ROLE[role] || MENU_BY_ROLE.guest;
+
+  const linksHtml = links
+    .map((item) => {
+      const activeClass = item.key === activeKey ? 'active' : '';
+      const extraClass = item.isBtn ? 'btn' : activeClass;
+      const inlineStyle = item.isBtn ? 'style="padding: 8px 18px; font-size: 0.92rem;"' : '';
+      return `<a href="${item.href}" class="${extraClass}" ${inlineStyle}>${item.label}</a>`;
+    })
+    .join('');
+
+  // Nếu đã đăng nhập, gắn thêm nhãn tên người dùng (bọc escapeHtml chống XSS) + nút Đăng xuất
+  const userHtml = user
+    ? `
+      <span class="nav-user-badge"><span class="led-dot green"></span><strong>${escapeHtml(user.full_name)}</strong></span>
+      <button type="button" class="btn-logout" onclick="logoutGym()">Đăng xuất</button>
+    `
+    : '';
+
+  navContainer.innerHTML = linksHtml + userHtml;
+}
 // 9. Khởi tạo toàn cục khi DOM sẵn sàng
 document.addEventListener('DOMContentLoaded', () => {
   // 9.1. Favicon
